@@ -1,0 +1,48 @@
+{
+  "env": {
+    "node": true,
+    "browser": true,
+    "es6": true
+  },
+  "parser": "babel-eslint",
+  "extends": [
+    "plugin:react/recommended",
+    "airbnb",
+    "plugin:prettier/recommended"
+  ],
+  "globals": {
+    "__DEV__": "readonly"
+  },
+  "parserOptions": {
+    "ecmaFeatures": {
+      "jsx": true
+    },
+    "ecmaVersion": 11,
+    "sourceType": "module"
+  },
+  "plugins": [
+    "react",
+    "react-hooks",
+    "prettier"
+  ],
+  "settings": {
+    "import/resolver": {
+      "babel-module": {}
+    }
+  },
+    "rules": {
+      "react-hooks/rules-of-hooks": "error",
+      "react-hooks/exhaustive-deps": "warn",
+      "import/prefer-default-export": "off",
+      "import/extensions": [
+        "error"
+      ],
+      "no-use-before-define": "off",
+      "react/prop-types": "off",
+      "react/jsx-props-no-spreading": "off",
+      "react/jsx-filename-extension": "off",
+      "react/jsx-curly-newline": "off",
+      "react/style-prop-object": "off",
+      "prettier/prettier": "error"
+    }
+  }
