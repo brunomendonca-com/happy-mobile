@@ -1,5 +1,6 @@
 module.exports = {
   singleQuote: true,
-  trailingComma: "all",
-  arrowParens: "avoid",
+  parser: 'typescript',
+  trailingComma: 'all',
+  arrowParens: 'avoid',
 };
