@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
   Image,
   View,
@@ -9,10 +9,10 @@ import {
   Linking,
 } from 'react-native';
 import MapView, { Marker } from 'react-native-maps';
-import { Feather, FontAwesome } from '@expo/vector-icons';
-import { useRoute } from '@react-navigation/native';
+import { Feather } from '@expo/vector-icons';
+import { useRoute, useFocusEffect } from '@react-navigation/native';
 
-import { RectButton, TouchableOpacity } from 'react-native-gesture-handler';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 import mapMarkerImg from '../images/map-marker.png';
 import api from '../services/api';
 
@@ -25,39 +25,41 @@ interface FosterHome {
   name: string;
   latitude: number;
   longitude: number;
-  about: string,
-  instructions: string,
-  opening_hours: string,
-  open_on_weekends: boolean,
+  about: string;
+  instructions: string;
+  opening_hours: string;
+  open_on_weekends: boolean;
   images: Array<{
-    id: number,
-    url: string,
-  }>
-};
+    id: number;
+    url: string;
+  }>;
+}
 
 const FosterHomeDetails = () => {
   const route = useRoute();
-  const [fosterHome, setFosterHome] = useState<FosterHome>()
+  const [fosterHome, setFosterHome] = useState<FosterHome>();
 
   const params = route.params as FosterHomeDetailsRouteParams;
 
-  useEffect(() => {
+  useFocusEffect(() => {
     api.get(`/fosterhomes/${params.id}`).then(response => {
-      setFosterHome(response.data)
-    })
-  }, [id]);
+      setFosterHome(response.data);
+    });
+  });
 
   if (!fosterHome) {
     return (
       <View style={styles.container}>
         <Text style={styles.description}>Loading...</Text>
       </View>
-    )
+    );
   }
 
   const handleGoogleMapsDirections = () => {
-    Linking.openURL(`https://www.google.com/maps/dir/?api=1&destination=${fosterHome?.latitude},${fosterHome?.longitude}`)
-  }
+    Linking.openURL(
+      `https://www.google.com/maps/dir/?api=1&destination=${fosterHome?.latitude},${fosterHome?.longitude}`,
+    );
+  };
 
   return (
     <ScrollView style={styles.container}>
@@ -72,25 +74,22 @@ const FosterHomeDetails = () => {
                   uri: image.url,
                 }}
               />
-            )
+            );
           })}
-
         </ScrollView>
       </View>
 
       <View style={styles.detailsContainer}>
         <Text style={styles.title}>{fosterHome.name}</Text>
-        <Text style={styles.description}>
-          {fosterHome.about}
-        </Text>
+        <Text style={styles.description}>{fosterHome.about}</Text>
 
         <View style={styles.mapContainer}>
           <MapView
             initialRegion={{
               latitude: fosterHome.latitude,
               longitude: fosterHome.longitude,
-              latitudeDelta: 0.008,
-              longitudeDelta: 0.008,
+              latitudeDelta: 0.003,
+              longitudeDelta: 0.003,
             }}
             zoomEnabled={false}
             pitchEnabled={false}
@@ -107,25 +106,24 @@ const FosterHomeDetails = () => {
             />
           </MapView>
 
-          <TouchableOpacity onPress={handleGoogleMapsDirections} style={styles.routesContainer}>
-            <Text style={styles.routesText}>
-              Get directions on Google Maps
-              </Text>
+          <TouchableOpacity
+            onPress={handleGoogleMapsDirections}
+            style={styles.routesContainer}
+          >
+            <Text style={styles.routesText}>Get directions on Google Maps</Text>
           </TouchableOpacity>
         </View>
 
         <View style={styles.separator} />
 
         <Text style={styles.title}>Volunteering Instructions</Text>
-        <Text style={styles.description}>
-          {fosterHome.instructions}
-        </Text>
+        <Text style={styles.description}>{fosterHome.instructions}</Text>
 
         <View style={styles.scheduleContainer}>
           <View style={[styles.scheduleItem, styles.scheduleItemBlue]}>
             <Feather name="clock" size={40} color="#2AB5D1" />
             <Text style={[styles.scheduleText, styles.scheduleTextBlue]}>
-              Monday to Friday {fosterHome.opening_hours}
+              {`Monday to Friday ${fosterHome.opening_hours}`}
             </Text>
           </View>
           {fosterHome.open_on_weekends ? (
@@ -134,19 +132,18 @@ const FosterHomeDetails = () => {
               {}
               <Text style={[styles.scheduleText, styles.scheduleTextGreen]}>
                 We are open
-              {'\n'}
-              on weekends
-            </Text>
+                {'\n'}
+                on weekends
+              </Text>
             </View>
           ) : (
               <View style={[styles.scheduleItem, styles.scheduleItemRed]}>
                 <Feather name="info" size={40} color="#FF669D" />
-                {}
                 <Text style={[styles.scheduleText, styles.scheduleTextRed]}>
                   We are not open
-              {'\n'}
-              on weekends
-            </Text>
+                {'\n'}
+                on weekends
+              </Text>
               </View>
             )}
         </View>
